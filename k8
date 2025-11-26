@@ -1,0 +1,546 @@
+
+
+# ✅ **1. Install kubectl**
+
+### **Option A — Easiest (recommended): via VS Code Kubernetes extension**
+
+1. Open **VS Code**
+2. Go to **Extensions** (`Ctrl+Shift+X`)
+3. Search for **“Kubernetes”** (by Microsoft)
+4. Click **Install**
+5. After installation, the extension will show a message:
+   **“kubectl not found — Install?”** → Click **Install kubectl**
+
+This automatically installs `kubectl` for your OS.
+
+---
+
+### **Option B — Manual install**
+
+#### **Windows (PowerShell)**
+
+```powershell
+winget install -e --id Kubernetes.kubectl
+```
+
+#### **macOS (Homebrew)**
+
+```bash
+brew install kubectl
+```
+
+#### **Linux (Deb package example — Ubuntu)**
+
+```bash
+sudo apt-get update
+sudo apt-get install -y kubectl
+```
+
+---
+
+# ✅ **2. Install Helm**
+
+### **Option A — VS Code (Kubernetes extension)**
+
+After installing the Kubernetes extension:
+
+* It will also detect missing **Helm**
+* Click **Install Helm**
+
+---
+
+### **Option B — Manual install**
+
+#### **Windows**
+
+```powershell
+winget install -e --id Helm.Helm
+```
+
+#### **macOS**
+
+```bash
+brew install helm
+```
+
+#### **Linux**
+
+```bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+---
+
+# ✅ **3. Verify installation**
+
+Open a terminal **inside VS Code** (`Ctrl + Shift + ˜`) and run:
+
+```bash
+kubectl version --client
+helm version
+```
+---
+
+aws configure
+aws --version
+
+-----
+
+---
+---
+---
+---
+
+
+
+# Infrastructure Deployment
+1. Verify prerequisite tools installation (AWS CLI, Terraform, kubectl, Helm)
+
+
+# ✅ **Infrastructure Deployment – Step 1: Verify Prerequisite Tools**
+
+Make sure the following are installed on your system:
+
+* **AWS CLI** 
+```bash
+aws --version
+```
+* **Terraform**
+```bash
+terraform -version
+brew upgrade terraform 
+```
+* **kubectl**
+```bash
+kubectl version --client
+```
+* **Helm**
+```bash
+helm version
+```
+
+# ✅ **Step 2: Create IAM User (`terraform-cli`) Manually in AWS Console**
+
+1. In AWS Console
+   → Go to **IAM**
+   → Click **Users**
+   → Click **Create user**
+
+2. **User name:**
+
+   ```
+   terraform-cli
+   ```
+
+3. **Provide access to AWS Management Console**
+   → Select **Provide user access to the AWS Management Console** (optional)
+
+4. **Permissions:**
+   → Select **Attach policies directly**
+   → Choose **AdministratorAccess**
+
+5. Click **Next** → **Create user**
+
+
+# ✅ **Step 3: Create Access Keys**
+
+1. Click the user: **terraform-cli**
+2. Go to **Security credentials** tab
+3. Scroll to **Access keys**
+4. Click **Create access key**
+5. Choose **Command Line Interface (CLI)**
+6. Check confirmation
+7. Click **Next** → **Create access key**
+8. Download the **CSV file** containing:
+
+   * Access Key ID
+   * Secret Access Key
+
+
+# ✅ **Step 4: Configure AWS CLI in VS Code Terminal**
+
+Open the terminal in VS Code and run:
+
+```bash
+aws configure
+```
+
+Enter the values:
+
+```
+AWS Access Key ID: <your Access Key ID>
+AWS Secret Access Key: <your Secret Access Key>
+Default region name: us-west-2
+Default output format: json
+```
+
+---
+
+# ✅ **Step 5: Test the AWS CLI**
+
+Run:
+
+```bash
+aws s3 ls
+```
+
+If everything is configured correctly, you will see your S3 buckets (or an empty list).
+
+---
+---
+---
+
+# 2.Initialize Terraform and review infrastructure code structure
+
+# ✅ **Step 6: Open KIRO & Sign In with AWS Builder ID**
+
+1. Open **KIRO** (AWS Cloud9 alternative for learning labs).
+2. Click **Sign in with AWS Builder ID**.
+3. If you don’t already have one, click:
+   **Create AWS Builder ID**
+4. Complete:
+
+   * Email
+   * Password
+   * Verification
+5. Sign in successfully.
+
+# ✅ **Step 7: Clone Your GitHub Project in Terminal**
+
+1. Open your terminal (VS Code terminal / KIRO terminal).
+2. Go to **Downloads** folder:
+
+```bash
+cd Downloads
+```
+
+3. Clone the GitHub repo:
+
+```bash
+git clone https://github.com/arumullayaswanth/k8s-microservices-ecommerce-app.git
+```
+
+4. Move into the project:
+
+```bash
+cd k8s-microservices-ecommerce-app
+```
+
+5. Make sure you’re on the **main** branch:
+
+```bash
+git branch
+git checkout main
+```
+
+# ✅ **Step 8: Open the Project in VS Code**
+
+Inside the project folder, run:
+
+```bash
+code .
+```
+
+This opens the entire repository in Visual Studio Code.
+
+---
+---
+---
+
+code explane terraform--->open READme.md -->main.tf.....etc
+
+# 🚀 **3.Deploy core infrastructure: VPC with proper networking and EKS cluster (10 min)**
+
+This is where you build the VPC + EKS cluster.
+
+You do it in **two phases** for stability:
+
+---
+
+## **1️⃣ Phase 1: Deploy VPC**
+
+```bash
+cd terraform
+terraform init
+terraform apply -target=module.vpc
+```
+
+### Why?
+
+* VPC must exist **before** EKS cluster can be created.
+* EKS requires:
+  ✔ private subnets
+  ✔ internet access
+  ✔ security groups
+
+This phase takes **2–3 minutes**.
+
+---
+
+## **2️⃣ Phase 2: Deploy EKS cluster**
+
+```bash
+terraform apply -target=module.retail_app_eks
+```
+
+### Why?
+
+* Terraform will now use the VPC output to place subnets + node groups correctly
+* EKS creation normally takes **8–10 minutes**.
+
+After this:
+
+* Your Kubernetes control plane is ready
+* Nodes are registered
+* Cluster endpoint is available
+
+---
+---
+---
+
+# 🔧 **4. *Configure kubectl access to the newly created cluster*
+
+After the EKS cluster is created, configure your local CLI to connect:
+
+```bash
+aws eks update-kubeconfig --region us-west-2 --name retail-store-vtnm
+aws eks get-token --cluster-name retail-store-dptj --region us-west-2
+
+
+
+
+```
+
+### What this command does:
+
+* Downloads the EKS cluster authentication information
+* Writes it to: `~/.kube/config`
+* Allows `kubectl` to communicate with the cluster
+
+You can now test:
+
+```bash
+kubectl get nodes
+kubectl get pods -A
+```
+
+If output appears → Your cluster is successfully connected.
+
+---
+---
+---
+
+# ✅ **5.  Deploy platform services: NGINX Ingress Controller, Cert Manager, ArgoCD**
+After your VPC and EKS cluster are up, the next step is to deploy essential platform services that will help manage your Kubernetes workloads effectively.
+### **1. NGINX Ingress Controller**
+
+* Provides external access to your microservices
+* Creates AWS Load Balancer (ALB/NLB)
+
+### **2. Cert-Manager**
+
+* Manages TLS certificates
+* Automates HTTPS with Let's Encrypt
+
+### **3. ArgoCD**
+
+* GitOps continuous delivery
+* Syncs Kubernetes manifests automatically
+* Web UI for managing deployments
+
+These are installed using **Terraform Helm modules** inside your `terraform/` folder.
+
+# 🚀 **PHASE 3 — Apply Full Terraform Deployment**
+
+Now that VPC + EKS cluster are ready, you can deploy everything else (Ingress, Cert-Manager, ArgoCD, etc.)
+
+## **1️⃣ Initialize Terraform**
+
+```bash
+terraform init
+```
+
+This:
+
+* Downloads providers (AWS, Helm, Kubernetes)
+* Downloads required modules
+* Prepares Terraform to run
+
+## **2️⃣ Review the Plan**
+
+```bash
+terraform plan
+```
+
+This shows:
+
+* Resources to be created
+* Helm charts to be installed
+* Kubernetes services & namespaces that will be added
+
+You can review to confirm everything looks correct.
+
+## **3️⃣ Apply the Complete Configuration**
+
+```bash
+terraform apply
+```
+
+Terraform will now deploy:
+
+### ✔ NGINX Ingress Controller
+
+(installed into namespace `ingress-nginx`)
+
+### ✔ Cert-Manager
+
+(installed into namespace `cert-manager`)
+
+### ✔ ArgoCD
+
+(installed into namespace `argocd`)
+
+### ✔ Kubernetes namespaces
+
+### ✔ ServiceAccounts, Roles, ClusterRoles
+
+### ✔ Managed DNS/Certificates (if configured)
+
+
+# 🎉 **After Apply Completes**
+
+Run this to verify:
+
+### 🔹 Check namespaces:
+
+```bash
+kubectl get ns
+```
+
+You should see:
+
+```
+ingress-nginx
+cert-manager
+argocd
+```
+
+---
+
+### 🔹 Check pods (NGINX, Cert-Manager, ArgoCD):
+
+```bash
+kubectl get pods -A
+```
+
+Look for:
+
+* `ingress-nginx-controller`
+* `cert-manager` pods
+* `argocd-server`, `argocd-repo-server`, `argocd-application-controller`
+
+---
+---
+---
+
+
+# Phase 3: GitOps Deployment & Operations
+```bash
+terraform output argocd_url
+```
+```bash
+terraform output argocd_admin_password
+```
+or
+## 1: Patch ArgoCD Server to Use a LoadBalancer
+Run this command:
+```bash
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+```
+This changes the service type without editing files manually.
+## 2 Wait for External IP
+Run:
+```bash
+kubectl get svc -n argocd
+```
+```bash
+NAME            TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                      AGE
+argocd-server   LoadBalancer   10.43.111.220   34.76.12.100     80:30080/TCP, 443:30443/TCP   1m
+```
+## 4: Login Credentials
+username:
+```bash
+admin
+```
+Password**
+
+Once deployed:
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret \
+  -o jsonpath="{.data.password}" | base64 --decode
+```
+## ⭐ Optional: HTTP → HTTPS Redirect
+ArgoCD normally serves on HTTPS only.
+But you can expose both ports:
+```bash
+kubectl edit svc argocd-server -n argocd
+```
+Ensure it includes:
+```bash
+ports:
+  - name: https
+    port: 443
+    targetPort: 8080
+  - name: http
+    port: 80
+    targetPort: 8080
+```
+---
+---
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+kubectl get nodes
+kubectl create ns demo-nginx
+
+```bash
+kubectl create ns demo-nginx
+```
+
+```bash
+kubectl run  nginx --image=nginx --port=80 -n demo-nginx
+```
+```bash
+kubectl get nodes
+```
+```bash
+kubectl get pods -n demo-nginx
+```
+```bash
+watch get pods -n demo-nginx
+```
+```bash
+kubectl get nodes
+```
+
