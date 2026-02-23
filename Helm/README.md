@@ -173,6 +173,50 @@ Add public repository:
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 ```
+```bash
+What is Bitnami?
+
+Bitnami is a company that provides pre-packaged, production-ready applications.
+
+They create and maintain high-quality Helm charts for popular software like:
+
+Nginx
+
+MySQL
+
+PostgreSQL
+
+Redis
+
+Kafka
+
+WordPress
+
+MongoDB
+
+Instead of writing YAML for these from scratch,
+we can install them directly using Bitnami charts.
+
+🟢 Why Bitnami is Important
+
+In real companies:
+
+You don’t write your own Redis YAML.
+
+You don’t manually configure PostgreSQL every time.
+
+You use trusted, well-maintained Helm charts.
+
+Bitnami charts are:
+
+• Production-ready
+• Security updated
+• Well documented
+• Actively maintained
+
+That’s why they are widely used.
+```
+
 
 Search:
 
@@ -184,6 +228,25 @@ Install nginx:
 
 ```bash
 helm install mynginx bitnami/nginx
+```
+```bash
+Helm:
+
+Downloads chart from Bitnami repo
+
+Reads default values.yaml
+
+Renders templates
+
+Sends to Kubernetes
+
+Stores release
+
+You didn’t write a single YAML file.
+
+But you deployed a full application.
+
+That is powerful.
 ```
 
 Check:
