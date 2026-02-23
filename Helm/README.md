@@ -180,19 +180,13 @@ Bitnami is a company that provides pre-packaged, production-ready applications.
 
 They create and maintain high-quality Helm charts for popular software like:
 
-Nginx
-
-MySQL
-
-PostgreSQL
-
-Redis
-
-Kafka
-
-WordPress
-
-MongoDB
+1. Nginx
+2. MySQL
+3. PostgreSQL
+4. Redis
+5. Kafka
+6. WordPress
+7. MongoDB
 
 Instead of writing YAML for these from scratch,
 we can install them directly using Bitnami charts.
@@ -229,25 +223,19 @@ Install nginx:
 ```bash
 helm install mynginx bitnami/nginx
 ```
-```bash
-Helm:
 
-Downloads chart from Bitnami repo
-
-Reads default values.yaml
-
-Renders templates
-
-Sends to Kubernetes
-
-Stores release
+What Happens Internally Helm:
+1. Downloads chart from Bitnami repo
+2. Reads default values.yaml
+3. Renders templates
+4. Sends to Kubernetes
+5. Stores release
 
 You didn’t write a single YAML file.
 
 But you deployed a full application.
 
 That is powerful.
-```
 
 Check:
 
