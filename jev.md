@@ -1,4 +1,141 @@
-Yes. Here is the **final version I would use for your explanation/video**. I’ll keep it like a real engineer explaining it on a whiteboard — not an “AI workspace” diagram.
+
+
+# – WHAT DOES "DECISION" ACTUALLY MEAN?
+
+Let's make this even simpler.
+
+Imagine I'm building a customer support system.
+
+I receive this:
+
+**"I cannot login to my account."**
+
+I can ask the model:
+
+### Question 1
+
+Is this an authentication problem?
+
+Answer:
+
+**YES**
+
+### Question 2
+
+Which team should handle this?
+
+Options:
+
+* Billing
+* Security
+* Engineering
+* Customer Support
+
+The model can select one.
+
+Maybe:
+
+**Customer Support**
+
+### Question 3
+
+Does this require immediate escalation?
+
+Answer:
+
+**NO**
+
+Now look at what happened.
+
+We didn't ask the AI to write a story.
+
+We asked it a set of structured questions.
+
+And that's the idea behind Jev.
+
+---
+
+# TYPES OF DECISIONS
+
+Now let's understand the different kinds of decisions.
+
+Don't worry about the terminology.
+
+I'll explain it with normal examples.
+
+## First: YES / NO
+
+Suppose I ask:
+
+**"Is this a payment-related issue?"**
+
+There are only two possibilities.
+
+Yes.
+
+Or no.
+
+That's a simple binary decision.
+
+---
+
+## Second: CHOICE
+
+Suppose I ask:
+
+**"Which team should handle this ticket?"**
+
+I can give the model options:
+
+```text
+Billing
+Engineering
+Security
+Support
+```
+
+The application expects one of those choices.
+
+That's a structured choice.
+
+---
+
+## Third: SCORE
+
+Now imagine I want to calculate priority.
+
+I define:
+
+```text
+1 = Very Low
+
+2 = Low
+
+3 = Medium
+
+4 = High
+
+5 = Critical
+```
+
+Then I can ask:
+
+**"What is the priority of this incident?"**
+
+Now I'm asking for a score rather than free-form text.
+
+So remember:
+
+**YES/NO**
+
+**CHOICE**
+
+**SCORE**
+
+These are examples of structured decisions.
+
+---
+
 
 # The example
 
