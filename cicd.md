@@ -35,7 +35,7 @@
 | 3    | GitOpsSync | Automatically syncs the reverted configuration to Kubernetes |
 
 **Rollback flow:** `RevertPR → MergePR → GitOpsSync`
----
+
 ## **Pipeline 2: GitHub Actions – Ephemeral PostgreSQL Databases for CI**
 
 | Stage | Job                                      | Easy meaning                                                    |
@@ -58,7 +58,6 @@
 | OWASP ZAP | DAST             | Checks the live website for common web security issues           |
 | Falco     | Runtime security | Monitors the application and Kubernetes cluster after deployment |
 
----
 
 ## **Pipeline 4: Functional Testing Pipeline**
 
@@ -96,7 +95,6 @@
 
 **Real-time example:** When a user registers on your application, functional tests verify that registration works, the user details are saved in PostgreSQL, and the user can log in successfully.
 
----
 
 ## **Pipeline 5: Performance Testing Pipeline**
 
@@ -149,7 +147,6 @@ Suppose your application normally handles 1,000 users.
 **Goal:** Make sure the application is fast, stable and scalable under different traffic conditions.
 
 
----
 
 ## **Pipeline 6: Synthetic Monitoring – Website Availability & Performance**
 
